@@ -61,6 +61,19 @@ function convertEventToEventForPay(event) {
 
       let events = [event1, event2];
       return new EventForPay(events);
+    } else {
+      const newEndDate = fullDateWithouthours(event.startDate);
+      const newStartDate = fullDateWithouthours(event.endDate);
+
+      const event1 = new Event(event.startDate, newEndDate.setHours(22, 0, 0));
+      const event2 = new Event(
+        newEndDate.setHours(22, 0, 0),
+        newStartDate.setHours(6, 0, 0)
+      );
+      const event3 = new Event(newStartDate.setHours(6, 0, 0), event.endDate);
+
+      let events = [event1, event2, event3];
+      return new EventForPay(events);
     }
   } else {
     return false;
