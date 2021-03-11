@@ -1,6 +1,9 @@
 const Event = require("./Event");
 const EventForPay = require("./EventForPay");
-
+// This is good in that it works. 
+// There is a step in the TDD process that is missing. While this solution works, 
+//there is a good amount of code that is duplicated. A better solution would not need so many if statements. 
+// Once you get a test passing its a good moment to experiement with removing duplication: You are protected by having your tests.
 function fullDateWithouthours(date) {
   let year = date.getFullYear();
   let month = date.getMonth();
