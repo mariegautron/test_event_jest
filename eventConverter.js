@@ -20,6 +20,8 @@ Date.prototype.addDays = function (days) {
 };
 
 function convertEventToEventForPay(event) {
+  // interestingly enough, as you tried to convert to recursive, you've already 
+  //naturally started simplifying and generalizing your algorithm. It would be simpler to do it the other way around - Reduce the complexity of the loop version, and then convert it.
   // Si le même jour
   if (
     fullDateWithouthours(event.startDate).getTime() ===
