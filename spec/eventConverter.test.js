@@ -1,4 +1,4 @@
-const convertEventToEventForPay = require("../sum");
+const convertEventToEventForPay = require("../eventConverter");
 const Event = require("../Event");
 const EventForPay = require("../EventForPay");
 
