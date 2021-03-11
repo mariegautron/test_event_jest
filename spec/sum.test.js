@@ -4,7 +4,7 @@ const EventForPay = require("../EventForPay");
 
 describe("tests convertEventToEventForPay", () => {
   test("the event starts during the day ends during the day.", async () => {
-    myevent = new Event(new Date(), new Date("2021-03-05T15:00:00"));
+    myevent = new Event( new Date("2021-03-10T08:00:00"), new Date("2021-03-10T15:00:00"));
     const response = convertEventToEventForPay(myevent);
     expect(response instanceof EventForPay).toBe(true);
     expect(response.events.length).toBe(1);
