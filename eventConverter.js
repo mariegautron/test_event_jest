@@ -5,7 +5,6 @@ function fullDateWithouthours(date) {
   let year = date.getFullYear();
   let month = date.getMonth();
   let day = date.getDate();
-
   return new Date(Date.UTC(year, month, day, 0, 0, 0));
 }
 
@@ -35,10 +34,8 @@ function convertEventToEventForPay(event) {
       // Si le même jour mais début en journée et fin la nuit
     } else if (isDayTime(event.startDate) && !isDayTime(event.endDate)) {
       const date = fullDateWithouthours(event.startDate);
-
       const event1 = new Event(event.startDate, date.setHours(21, 59, 59));
       const event2 = new Event(date.setHours(22, 0, 0), event.endDate);
-
       let events = [event1, event2];
       return new EventForPay(events);
     } else {
@@ -54,27 +51,28 @@ function convertEventToEventForPay(event) {
     if (isDayTime(event.startDate) && !isDayTime(event.endDate)) {
       const newEndDate = fullDateWithouthours(event.startDate);
       const newStartDate = fullDateWithouthours(event.endDate);
-
-      const event1 = new Event(event.startDate, newEndDate.setHours(21, 59, 59));
+      const event1 = new Event(
+        event.startDate,
+        newEndDate.setHours(21, 59, 59)
+      );
       const event2 = new Event(newStartDate.setHours(22, 0, 0), event.endDate);
-
       let events = [event1, event2];
       return new EventForPay(events);
       // Si ça commence la nuit le 1er jour et ça fini la journée le deuxième
     } else if (!isDayTime(event.startDate) && isDayTime(event.endDate)) {
       const newEndDate = fullDateWithouthours(event.startDate);
       const newStartDate = fullDateWithouthours(event.endDate);
-
       const event1 = new Event(event.startDate, newEndDate.setHours(5, 59, 59));
       const event2 = new Event(newStartDate.setHours(6, 0, 0), event.endDate);
-
       let events = [event1, event2];
       return new EventForPay(events);
     } else {
       const newEndDate = fullDateWithouthours(event.startDate);
       const newStartDate = fullDateWithouthours(event.endDate);
-
-      const event1 = new Event(event.startDate, newEndDate.setHours(21, 59, 59));
+      const event1 = new Event(
+        event.startDate,
+        newEndDate.setHours(21, 59, 59)
+      );
       const event2 = new Event(
         newEndDate.setHours(22, 0, 0),
         newStartDate.setHours(5, 59, 59)
@@ -88,5 +86,47 @@ function convertEventToEventForPay(event) {
     return false;
   }
 }
-
 module.exports = convertEventToEventForPay;
+
+  let events = [];
+
+  function convertR(event) {
+    if (
+      // fullDateWithouthours(event.startDate).getTime() ===
+      //   fullDateWithouthours(event.endDate).getTime() &&
+      
+      ((isDayTime(event.startDate) && isDayTime(event.endDate)) ||
+        (!isDayTime(event.startDate) && !isDayTime(event.endDate)))
+    ) {
+      events.push(event);
+      return new EventForPay(events);
+    } else if (isDayTime(event.startDate)) {
+      const date = fullDateWithouthours(event.startDate);
+      const first = new Event(
+        event.startDate,
+        new Date(date.setHours(21, 59, 59))
+      );
+      events.push(first);
+
+      const next = new Event(new Date(date.setHours(22, 0, 0)), event.endDate);
+
+      return convertR(next);
+    } else if (!isDayTime(event.startDate)) {
+
+      const date = fullDateWithouthours(event.startDate);
+      const first = new Event(
+        event.startDate,
+        new Date(date.setHours(5, 59, 59))
+      );
+      events.push(first);
+
+      const next = new Event(new Date(date.setHours(6, 0, 0)), event.endDate);
+      return convertR(next);
+
+    } else {
+      return false;
+    }
+  }
+
+
+module.exports = convertR;
